@@ -1,19 +1,32 @@
 import React, { useState } from "react";
 import "./App.css";
+import BesierLogic from "./BesierLogic.js";
 
 function App() {
   const [pointNumber, setPointNumber] = useState(3);
-  const [IterNumber, setIterNumber] = useState(1);
-  const [inputs, setInputs] = useState([]);
+  const [iterNumber, setIterNumber] = useState(1);
+  const [inputx, setInputx] = useState([]);
+  const [inputy, setInputy] = useState([]);
 
-  const handleInputChange = (index, value) => {
-    const newInputs = [...inputs];
+  const handleInputChangex = (index, value) => {
+    const newInputs = [...inputx];
     newInputs[index] = value;
-    setInputs(newInputs);
+    setInputx(newInputs);
   };
 
-  const handleAddInput = () => {
-    setInputs([...inputs, ""]);
+  const handleInputChangey = (index, value) => {
+    const newInputs = [...inputy];
+    newInputs[index] = value;
+    setInputy(newInputs);
+  };
+
+  // const handleAddInput = () => {
+  //   setInputs([...inputs, ""]);
+  // };
+
+  const handleBesierLogic = () => {
+    const result = BesierLogic(pointNumber, iterNumber, inputx, inputy);
+    console.log(result);
   };
 
   return (
@@ -38,7 +51,7 @@ function App() {
           className="input"
           type="number"
           placeholder="Number"
-          value={IterNumber}
+          value={iterNumber}
           onChange={(e) => {
             const newValue = parseInt(e.target.value);
             if (isNaN(newValue)) {
@@ -77,22 +90,25 @@ function App() {
               className="input"
               type="text"
               placeholder={`x${index + 1}`}
-              value={inputs[index] ? inputs[index][0] : ""}
-              onChange={(e) => handleInputChange(index, e.target.value, 0)}
+              value={inputx[index] ? inputx[index] : ""}
+              onChange={(e) => handleInputChangex(index, e.target.value, 0)}
             />
             <input
               className="input"
               type="text"
               placeholder={`y${index + 1}`}
-              value={inputs[index] ? inputs[index][1] : ""}
-              onChange={(e) => handleInputChange(index, e.target.value, 1)}
+              value={inputy[index] ? inputy[index] : ""}
+              onChange={(e) => handleInputChangey(index, e.target.value, 1)}
             />
           </div>
           <br />
         </div>
       ))}
-      <button className="addButton" onClick={handleAddInput}>
+      {/* <button className="addButton" onClick={handleAddInput}>
         Add Input
+      </button> */}
+      <button className="addButton" onClick={handleBesierLogic}>
+        Process Bezier Curve
       </button>
     </div>
   );
