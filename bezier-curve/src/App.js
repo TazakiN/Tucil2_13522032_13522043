@@ -1,12 +1,16 @@
 import React, { useState } from "react";
 import "./App.css";
+import { Mafs, Line, Coordinates, useMovablePoint } from "mafs";
 import BesierLogic from "./BesierLogic.js";
+import DotRenderer from "./DotRenderer.js";
 
 function App() {
   const [pointNumber, setPointNumber] = useState(3);
   const [iterNumber, setIterNumber] = useState(1);
   const [inputx, setInputx] = useState([]);
   const [inputy, setInputy] = useState([]);
+  const [result, setResult] = useState([]);
+  // const [rerender, setRerender] = useState(false);
 
   const handleInputChangex = (index, value) => {
     const newInputs = [...inputx];
@@ -25,8 +29,13 @@ function App() {
   // };
 
   const handleBesierLogic = () => {
-    const result = BesierLogic(pointNumber, iterNumber, inputx, inputy);
-    console.log(result);
+    const newresult = BesierLogic(pointNumber, iterNumber, inputx, inputy);
+    console.log(newresult);
+    setResult(newresult);
+  };
+
+  const handleProcessBezierCurve = () => {
+    handleBesierLogic();
   };
 
   return (
@@ -91,14 +100,18 @@ function App() {
               type="text"
               placeholder={`x${index + 1}`}
               value={inputx[index] ? inputx[index] : ""}
-              onChange={(e) => handleInputChangex(index, e.target.value, 0)}
+              onChange={(e) =>
+                handleInputChangex(index, parseInt(e.target.value), 0)
+              }
             />
             <input
               className="input"
               type="text"
               placeholder={`y${index + 1}`}
               value={inputy[index] ? inputy[index] : ""}
-              onChange={(e) => handleInputChangey(index, e.target.value, 1)}
+              onChange={(e) =>
+                handleInputChangey(index, parseInt(e.target.value), 1)
+              }
             />
           </div>
           <br />
@@ -107,9 +120,18 @@ function App() {
       {/* <button className="addButton" onClick={handleAddInput}>
         Add Input
       </button> */}
-      <button className="addButton" onClick={handleBesierLogic}>
+      <button className="addButton" onClick={handleProcessBezierCurve}>
         Process Bezier Curve
       </button>
+      <Mafs
+        viewBox={{ x: [-10, 10], y: [-10, 10] }}
+        preserveAspectRatio={false}
+      >
+        <Coordinates.Cartesian />
+        {result.slice(0, result.length - 1).map((_, idx) => (
+          <DotRenderer key={idx} data={result} indek={idx} />
+        ))}
+      </Mafs>
     </div>
   );
 }

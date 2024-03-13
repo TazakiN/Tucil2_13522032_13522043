@@ -1,7 +1,9 @@
+@import "mafs/core.css";
+
 body {
   margin: 0;
   padding: 0;
-  font-family: 'Tauri', sans-serif;
+  font-family: "Tauri", sans-serif;
   height: 100vh;
   background: linear-gradient(135deg, #2c3e50, #4ca1af);
   display: flex;
@@ -62,6 +64,7 @@ h1 {
 .addButton {
   width: 100%;
   margin-top: 10px;
+  margin-bottom: 20px;
   padding: 10px;
   border: none;
   border-radius: 5px;
