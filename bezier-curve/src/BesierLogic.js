@@ -1,18 +1,3 @@
-// function BesierLogic(pointNumber, iterNumber, inputx, inputy) {
-//   console.log("Processing Bezier Curve...");
-//   console.log("Point Number:", pointNumber);
-//   console.log("Iteration Number:", iterNumber);
-//   console.log("Input X:", inputx);
-//   console.log("Input Y:", inputy);
-
-//   return "Bezier Curve";
-// }
-
-// export default BesierLogic;
-
-import "./App.css";
-// import { Mafs, Point, Coordinates } from "mafs";
-
 function BesierLogic(pointNumber, iterNumber, inputx, inputy) {
   let BezierPointx = []; // tempat hasil bejir x
   let BezierPointy = []; // tempat hasil bejir y
@@ -100,38 +85,11 @@ function BesierLogic(pointNumber, iterNumber, inputx, inputy) {
     return arr;
   }
 
-  // // contoh inputan
-  // let a1x = 0;
-  // let a1y = 0;
-  // let a2x = 3;
-  // let a2y = 9;
-  // let a3x = 10;
-  // let a3y = -12;
-  // let a4x = 15;
-  // let a4y = 8;
-  // let a5x = 20;
-  // let a5y = -7;
-  // Pointx.push(a1x);
-  // Pointx.push(a2x);
-  // Pointx.push(a3x);
-  // Pointx.push(a4x);
-  // Pointx.push(a5x);
-  // Pointy.push(a1y);
-  // Pointy.push(a2y);
-  // Pointy.push(a3y);
-  // Pointy.push(a4y);
-  // Pointy.push(a5y);
-
-  CreateBezier(Pointx, Pointy);
-
-  // for (let i = 0; i < BezierPointx.length; i++)
+  CreateBezier(Pointx, Pointy); // jalankan fungsi bezier
 
   let fin = [];
-  for (let i = 0; i < BezierPointx.length; i++) {
-    fin.push([BezierPointx[i], BezierPointy[i]]);
-  }
-  // console.log(BezierPointx, BezierPointy);
-
+  fin.push(BezierPointx);
+  fin.push(BezierPointy);
   return fin;
 }
 
