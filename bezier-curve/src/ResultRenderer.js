@@ -1,7 +1,7 @@
-import { Mafs, Line, Coordinates, useMovablePoint } from "mafs";
+import { Line, useMovablePoint } from "mafs";
 import { Fragment } from "react";
 
-function DotRenderer({ data, indek }) {
+function ResultRenderer({ data, indek }) {
   let point1 = useMovablePoint([data[0][indek], data[1][indek]]);
   let point2 = useMovablePoint([data[0][indek + 1], data[1][indek + 1]]);
   return (
@@ -13,4 +13,4 @@ function DotRenderer({ data, indek }) {
   );
 }
 
-export default DotRenderer;
+export default ResultRenderer;
