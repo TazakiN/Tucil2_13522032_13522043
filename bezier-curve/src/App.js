@@ -1,9 +1,8 @@
 import React, { useState } from "react";
 import "./App.css";
-import { Mafs, Coordinates } from "mafs";
+import { Mafs, Coordinates, Line } from "mafs";
 import BesierLogic from "./BesierLogic.js";
 import ResultRenderer from "./ResultRenderer.js";
-import BezierBF from "./BezierBF.js";
 import {
   drawLineSegments,
   makeCtrlPoints,
@@ -17,6 +16,7 @@ function App() {
   const [inputy, setInputy] = useState([]);
   const [result, setResult] = useState([]);
   const [daMafs, setMafs] = useState(null);
+  const [counter, setcounter] = useState(1);
 
   let inputedPoints = makeCtrlPoints(inputx, inputy, pointNumber);
 
@@ -35,19 +35,7 @@ function App() {
   const handleBesierLogic = () => {
     const newresult = BesierLogic(pointNumber, iterNumber, inputx, inputy);
     console.log(newresult);
-    // console.log(daMafs);
     setResult(newresult);
-
-    // BFFFFFFFFFFFFFF
-
-    // let newP = [];
-    // for (let i = 0; i < inputx.length; i++) {
-    //   newP.push([inputx[i], inputy[i]]);
-    // }
-    // console.log("HOHOHO");
-    // console.log(BezierBF(iterNumber, newP));
-
-    // BFFFFFFFFFFFFFF
 
     let maxx = newresult[0][0];
     let minx = newresult[0][0];
@@ -69,7 +57,7 @@ function App() {
     }
     setMafs(
       <Mafs
-        viewBox={{ x: [minx - 5, maxx + 5], y: [miny - 5, maxy + 5] }}
+        viewBox={{ x: [minx - 2, maxx + 2], y: [miny - 2, maxy + 2] }}
         // x: [Math.min(result[0]), Math.max(result[0])],
         //   y: [Math.min(result[1]), Math.max(result[1])],
         preserveAspectRatio={false}
@@ -78,16 +66,31 @@ function App() {
 
         {/* buat ctrl point dan garisnya */}
 
-        {inputedPoints.slice(0, inputedPoints.length - 1).map((_, idx) => (
-          <ResultRenderer key={idx} data={inputedPoints} index={idx} />
+        {inputedPoints.slice(0, inputedPoints.length - 1).map((item, idx) => (
+          <ResultRenderer
+            key={idx + counter * 1000}
+            data={inputedPoints}
+            index={idx}
+          />
         ))}
 
-        {drawLineSegments(newresult, "#AA19C7", 1)}
-        {drawPoints(newresult, "#AA19C7", 1)}
+        {newresult.slice(0, newresult.length - 1).map((item, idx) => (
+          <Line.Segment
+            key={idx + counter * 1000}
+            point1={newresult[idx]}
+            point2={newresult[idx + 1]}
+            opacity={1}
+            color={"#AA19C7"}
+          />
+        ))}
 
-        {result.length > 0 && <ResultRenderer data={result} />}
+        {/* {drawLineSegments(newresult, "#AA19C7", 1)} */}
+        {/* {drawPoints(newresult, "#AA19C7", 1)} */}
+
+        {/* {result.length > 0 && <ResultRenderer data={result} />} */}
       </Mafs>
     );
+    setcounter(counter + 1);
   };
 
   return (
