@@ -17,6 +17,8 @@ function App() {
   const [result, setResult] = useState([]);
   const [daMafs, setMafs] = useState(null);
 
+  let inputedPoints = makeCtrlPoints(inputx, inputy, pointNumber);
+
   const handleInputChangex = (index, value) => {
     const newInputs = [...inputx];
     newInputs[index] = value;
@@ -45,8 +47,8 @@ function App() {
 
         {/* buat ctrl point dan garisnya */}
 
-        {newresult.slice(0, newresult.length - 1).map((_, idx) => (
-          <ResultRenderer key={idx} data={newresult} index={idx} />
+        {inputedPoints.slice(0, newresult.length - 1).map((_, idx) => (
+          <ResultRenderer key={idx} data={inputedPoints} index={idx} />
         ))}
 
         {/* {drawLineSegments(
@@ -63,10 +65,6 @@ function App() {
         {/* {result.length > 0 && <ResultRenderer data={result} />} */}
       </Mafs>
     );
-  };
-
-  const handleProcessBezierCurve = () => {
-    handleBesierLogic();
   };
 
   return (
