@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import "./App.css";
 import { Mafs, Coordinates } from "mafs";
 import BesierLogic from "./BesierLogic.js";
+import ResultRenderer from "./ResultRenderer.js";
 import {
   drawLineSegments,
   makeCtrlPoints,
@@ -14,6 +15,7 @@ function App() {
   const [inputx, setInputx] = useState([]);
   const [inputy, setInputy] = useState([]);
   const [result, setResult] = useState([]);
+  const [daMafs, setMafs] = useState(null);
 
   const handleInputChangex = (index, value) => {
     const newInputs = [...inputx];
@@ -29,9 +31,38 @@ function App() {
 
   const handleBesierLogic = () => {
     const newresult = BesierLogic(pointNumber, iterNumber, inputx, inputy);
-    console.log("result");
     console.log(newresult);
+    // console.log(daMafs);
     setResult(newresult);
+    setMafs(
+      <Mafs
+        viewBox={{ x: [-10, 10], y: [-10, 10] }}
+        // x: [Math.min(result[0]), Math.max(result[0])],
+        //   y: [Math.min(result[1]), Math.max(result[1])],
+        preserveAspectRatio={false}
+      >
+        <Coordinates.Cartesian />
+
+        {/* buat ctrl point dan garisnya */}
+
+        {newresult.slice(0, newresult.length - 1).map((_, idx) => (
+          <ResultRenderer key={idx} data={newresult} index={idx} />
+        ))}
+
+        {/* {drawLineSegments(
+            makeCtrlPoints(inputx, inputy, pointNumber),
+            "#AA19C7",
+            1
+          )}
+          {drawPoints(
+            makeCtrlPoints(inputx, inputy, pointNumber),
+            "#AA19C7",
+            1
+          )} */}
+
+        {/* {result.length > 0 && <ResultRenderer data={result} />} */}
+      </Mafs>
+    );
   };
 
   const handleProcessBezierCurve = () => {
@@ -119,33 +150,12 @@ function App() {
           </div>
         ))}
 
-        <button className="addButton" onClick={handleProcessBezierCurve}>
+        <button className="addButton" onClick={handleBesierLogic}>
           Process Bezier Curve
         </button>
       </div>
       <div className="container" hidden={result.length === 0}>
-        <Mafs
-          viewBox={{ x: [-10, 10], y: [-10, 10] }}
-          // x: [Math.min(result[0]), Math.max(result[0])],
-          //   y: [Math.min(result[1]), Math.max(result[1])],
-          preserveAspectRatio={false}
-        >
-          <Coordinates.Cartesian />
-
-          {/* buat ctrl point dan garisnya */}
-          {drawLineSegments(
-            makeCtrlPoints(inputx, inputy, pointNumber),
-            "#AA19C7",
-            1
-          )}
-          {drawPoints(
-            makeCtrlPoints(inputx, inputy, pointNumber),
-            "#AA19C7",
-            1
-          )}
-
-          {/* {result.length > 0 && <ResultRenderer data={result} />} */}
-        </Mafs>
+        {daMafs}
       </div>
     </>
   );
