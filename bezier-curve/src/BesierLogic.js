@@ -88,8 +88,9 @@ function BesierLogic(pointNumber, iterNumber, inputx, inputy) {
   CreateBezier(Pointx, Pointy); // jalankan fungsi bezier
 
   let fin = [];
-  fin.push(BezierPointx);
-  fin.push(BezierPointy);
+  for (let i = 0; i < BezierPointx.length; i++) {
+    fin.push([BezierPointx[i], BezierPointy[i]]);
+  }
   return fin;
 }
 

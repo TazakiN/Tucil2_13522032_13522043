@@ -117,7 +117,9 @@ function App() {
       </div>
       <div className="container" hidden={result.length === 0}>
         <Mafs
-          viewBox={{ x: [-10, 10], y: [-10, 10] }}
+          viewBox={{ x: [-30, 30], y: [-30, 30] }}
+          // x: [Math.min(result[0]), Math.max(result[0])],
+          //   y: [Math.min(result[1]), Math.max(result[1])],
           preserveAspectRatio={false}
         >
           <Coordinates.Cartesian />
@@ -125,7 +127,7 @@ function App() {
           <CtrlPointRenderer listX={inputx} listY={inputy} />
 
           {result.slice(0, result.length - 1).map((_, idx) => (
-            <ResultRenderer key={idx} data={result} indek={idx} />
+            <ResultRenderer key={idx} data={result} index={idx} />
           ))}
         </Mafs>
       </div>
