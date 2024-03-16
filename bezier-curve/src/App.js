@@ -3,6 +3,7 @@ import "./App.css";
 import { Mafs, Coordinates } from "mafs";
 import BesierLogic from "./BesierLogic.js";
 import ResultRenderer from "./ResultRenderer.js";
+import BezierBF from "./BezierBF.js";
 import {
   drawLineSegments,
   makeCtrlPoints,
@@ -36,9 +37,39 @@ function App() {
     console.log(newresult);
     // console.log(daMafs);
     setResult(newresult);
+
+    // BFFFFFFFFFFFFFF
+
+    // let newP = [];
+    // for (let i = 0; i < inputx.length; i++) {
+    //   newP.push([inputx[i], inputy[i]]);
+    // }
+    // console.log("HOHOHO");
+    // console.log(BezierBF(iterNumber, newP));
+
+    // BFFFFFFFFFFFFFF
+
+    let maxx = newresult[0][0];
+    let minx = newresult[0][0];
+    let maxy = newresult[0][1];
+    let miny = newresult[0][1];
+    for (let i = 0; i < newresult.length; i++) {
+      if (newresult[i][0] >= maxx) {
+        maxx = newresult[i][0];
+      }
+      if (newresult[i][0] <= minx) {
+        minx = newresult[i][0];
+      }
+      if (newresult[i][1] >= maxy) {
+        maxy = newresult[i][1];
+      }
+      if (newresult[i][1] <= miny) {
+        miny = newresult[i][1];
+      }
+    }
     setMafs(
       <Mafs
-        viewBox={{ x: [-10, 10], y: [-10, 10] }}
+        viewBox={{ x: [minx - 5, maxx + 5], y: [miny - 5, maxy + 5] }}
         // x: [Math.min(result[0]), Math.max(result[0])],
         //   y: [Math.min(result[1]), Math.max(result[1])],
         preserveAspectRatio={false}
@@ -47,22 +78,14 @@ function App() {
 
         {/* buat ctrl point dan garisnya */}
 
-        {inputedPoints.slice(0, newresult.length - 1).map((_, idx) => (
+        {inputedPoints.slice(0, inputedPoints.length - 1).map((_, idx) => (
           <ResultRenderer key={idx} data={inputedPoints} index={idx} />
         ))}
 
-        {/* {drawLineSegments(
-            makeCtrlPoints(inputx, inputy, pointNumber),
-            "#AA19C7",
-            1
-          )}
-          {drawPoints(
-            makeCtrlPoints(inputx, inputy, pointNumber),
-            "#AA19C7",
-            1
-          )} */}
+        {drawLineSegments(newresult, "#AA19C7", 1)}
+        {drawPoints(newresult, "#AA19C7", 1)}
 
-        {/* {result.length > 0 && <ResultRenderer data={result} />} */}
+        {result.length > 0 && <ResultRenderer data={result} />}
       </Mafs>
     );
   };
