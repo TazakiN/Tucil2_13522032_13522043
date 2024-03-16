@@ -2,8 +2,11 @@ import React, { useState } from "react";
 import "./App.css";
 import { Mafs, Coordinates } from "mafs";
 import BesierLogic from "./BesierLogic.js";
-import ResultRenderer from "./ResultRenderer.js";
-import CtrlPointRenderer from "./CtrlPointRenderer.js";
+import {
+  drawLineSegments,
+  makeCtrlPoints,
+} from "./components/CtrlPointRenderer.js";
+import { drawPoints } from "./components/drawPoints.js";
 
 function App() {
   const [pointNumber, setPointNumber] = useState(3);
@@ -26,6 +29,7 @@ function App() {
 
   const handleBesierLogic = () => {
     const newresult = BesierLogic(pointNumber, iterNumber, inputx, inputy);
+    console.log("result");
     console.log(newresult);
     setResult(newresult);
   };
@@ -97,14 +101,18 @@ function App() {
                 type="number"
                 placeholder={`x${index + 1}`}
                 value={inputx[index]}
-                onChange={(e) => handleInputChangex(index, e.target.value, 0)}
+                onChange={(e) =>
+                  handleInputChangex(index, parseInt(e.target.value), 0)
+                }
               />
               <input
                 className="input"
                 type="number"
                 placeholder={`y${index + 1}`}
                 value={inputy[index] ? inputy[index] : ""}
-                onChange={(e) => handleInputChangey(index, e.target.value, 1)}
+                onChange={(e) =>
+                  handleInputChangey(index, parseInt(e.target.value), 1)
+                }
               />
             </div>
             <br />
@@ -117,18 +125,26 @@ function App() {
       </div>
       <div className="container" hidden={result.length === 0}>
         <Mafs
-          viewBox={{ x: [-30, 30], y: [-30, 30] }}
+          viewBox={{ x: [-10, 10], y: [-10, 10] }}
           // x: [Math.min(result[0]), Math.max(result[0])],
           //   y: [Math.min(result[1]), Math.max(result[1])],
           preserveAspectRatio={false}
         >
           <Coordinates.Cartesian />
 
-          <CtrlPointRenderer listX={inputx} listY={inputy} />
+          {/* buat ctrl point dan garisnya */}
+          {drawLineSegments(
+            makeCtrlPoints(inputx, inputy, pointNumber),
+            "#AA19C7",
+            1
+          )}
+          {drawPoints(
+            makeCtrlPoints(inputx, inputy, pointNumber),
+            "#AA19C7",
+            1
+          )}
 
-          {result.slice(0, result.length - 1).map((_, idx) => (
-            <ResultRenderer key={idx} data={result} index={idx} />
-          ))}
+          {/* {result.length > 0 && <ResultRenderer data={result} />} */}
         </Mafs>
       </div>
     </>
