@@ -6,6 +6,7 @@ body {
   font-family: "Tauri", sans-serif;
   background: linear-gradient(135deg, #2c3e50, #4ca1af);
   display: flex;
+  min-height: 100vh;
   justify-content: center;
   align-items: center;
 }
