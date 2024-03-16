@@ -1,97 +1,74 @@
 function BesierLogic(pointNumber, iterNumber, inputx, inputy) {
-  let BezierPointx = []; // tempat hasil bejir x
-  let BezierPointy = []; // tempat hasil bejir y
+  let BezierPoints = [];
   let Pointx = inputx; // tempat titik titiknya x
   let Pointy = inputy; // tempat titik titiknya y
   let iterations = iterNumber; // banyak iterasi
 
-  function CreateBezier(arrayTitikx, arrayTitiky) {
-    BezierPointx.push(arrayTitikx[0]); // titik awal
-    BezierPointy.push(arrayTitiky[0]); // titik awal
+  function CreateBezier(titikTitik) {
+    BezierPoints.push(titikTitik[0]);
 
-    for (let i = 0; i < arrayTitikx.length - 2; i++) {
-      // populate tergantung banyak titik
-      PopulateBezierPoints(
-        arrayTitikx[i],
-        arrayTitikx[i + 1],
-        arrayTitikx[i + 2],
-        arrayTitiky[i],
-        arrayTitiky[i + 1],
-        arrayTitiky[i + 2],
-        0
-      );
-    }
+    MidPointBezierPoints(
+      titikTitik, // titik y
+      0 // current iteration
+    );
 
-    BezierPointx.push(arrayTitikx[arrayTitikx.length - 1]); // titik akhir
-    BezierPointy.push(arrayTitiky[arrayTitiky.length - 1]); // titik akhir
+    BezierPoints.push(titikTitik[titikTitik.length - 1]);
   }
 
-  function PopulateBezierPoints(
-    ctrlx1,
-    ctrlx2,
-    ctrlx3,
-    ctrly1,
-    ctrly2,
-    ctrly3,
-    currentIteration
-  ) {
-    if (currentIteration < iterations) {
-      // itung mid point
-      let midPoint1 = MidPoint(ctrlx1, ctrly1, ctrlx2, ctrly2);
-      let midPoint2 = MidPoint(ctrlx2, ctrly2, ctrlx3, ctrly3);
-      let midPoint3 = MidPoint(
-        midPoint1[0],
-        midPoint1[1],
-        midPoint2[0],
-        midPoint2[1]
-      );
-
-      currentIteration++;
-
-      PopulateBezierPoints(
-        ctrlx1,
-        midPoint1[0],
-        midPoint3[0],
-        ctrly1,
-        midPoint1[1],
-        midPoint3[1],
-        currentIteration
-      ); // itung titik bezier dari 3 titik kiri
-      BezierPointx.push(midPoint3[0]); // masukin titik tengah ke hasil
-      BezierPointy.push(midPoint3[1]); // masukin titik tengah ke hasil
-      PopulateBezierPoints(
-        midPoint3[0],
-        midPoint2[0],
-        ctrlx3,
-        midPoint3[1],
-        midPoint2[1],
-        ctrly3,
-        currentIteration
-      ); // itung titik bezier dari 3 titik kanan
+  function MidPointBezierPoints(aray, currentIteration) {
+    if (currentIteration >= iterations) {
+      return [MidPoint(aray[0], aray[aray.length - 1])];
     }
+
+    let nextIter = [];
+    let midPoints = [];
+    for (let i = 0; i < aray.length - 1; i++) {
+      let mid = MidPoint(aray[i], aray[i + 1]);
+      midPoints.push(mid);
+    }
+
+    let hasil;
+    let hasilIter = [];
+    for (let i = 0; i < midPoints.length - 1; i++) {
+      hasil = MidPoint(midPoints[i], midPoints[i + 1]);
+      hasilIter.push(hasil);
+      BezierPoints.push(hasil);
+    }
+
+    nextIter.push(aray[0]);
+    for (let i = 0; i < midPoints.length; i++) {
+      nextIter.push(midPoints[i]);
+      if (i < hasilIter.length) {
+        nextIter.push(hasilIter[i]);
+      }
+    }
+
+    // BezierPoints.push(hasilIter);
   }
 
-  function MidPoint(
-    controlPoint1x,
-    controlPoint1y,
-    controlPoint2x,
-    controlPoint2y
-  ) {
+  function MidPoint(titik1, titik2) {
     // ngitung titik tengah dari 2 titik
-    let arr = [
-      (controlPoint1x + controlPoint2x) / 2,
-      (controlPoint1y + controlPoint2y) / 2,
-    ];
+    let arr = [(titik1[0] + titik2[0]) / 2, (titik1[1] + titik2[1]) / 2];
     return arr;
   }
 
-  CreateBezier(Pointx, Pointy); // jalankan fungsi bezier
-
-  let fin = [];
-  for (let i = 0; i < BezierPointx.length; i++) {
-    fin.push([BezierPointx[i], BezierPointy[i]]);
+  function makePoints(arrayX, arrayY) {
+    let arr = [];
+    for (let i = 0; i < arrayX.length; i++) {
+      arr.push([arrayX[i], arrayY[i]]);
+    }
+    return arr;
   }
-  return fin;
+
+  let titikTitik = makePoints(Pointx, Pointy);
+  CreateBezier(titikTitik); // jalankan fungsi bezier
+
+  return BezierPoints;
 }
 
 export default BesierLogic;
+// Contoh penggunaan
+
+// const results = BesierLogic(3, 1, [20, 30, 150, 200], [10, 100, 200, 75]);
+
+// console.log(results);
