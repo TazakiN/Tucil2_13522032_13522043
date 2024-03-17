@@ -4,6 +4,7 @@ import { Mafs, Coordinates, Line } from "mafs";
 import BesierLogic from "./BesierLogic.js";
 import ResultRenderer from "./ResultRenderer.js";
 import BezierBF from "./BezierBF.js";
+import BezierLogicv2 from "./BezierLogicv2.js";
 import {
   drawLineSegments,
   makeCtrlPoints,
@@ -34,8 +35,9 @@ function App() {
   };
 
   const handleBesierLogic = () => {
-    // const newresult = BesierLogic(pointNumber, iterNumber, inputx, inputy); // DNC
-    const newresult = BezierBF(iterNumber, inputx, inputy); //BF
+    // const newresult = BesierLogic(pointNumber, iterNumber, inputx, inputy); // DNCv1
+    // const newresult = BezierBF(iterNumber, inputx, inputy); //BF
+    const newresult = BezierLogicv2(iterNumber, inputx, inputy); // DNCv2
     console.log("HERE");
     console.log(newresult);
     setResult(newresult);
