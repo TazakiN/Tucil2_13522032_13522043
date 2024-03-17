@@ -1,18 +1,18 @@
 function BesierLogic(pointNumber, iterNumber, inputx, inputy) {
-  let BezierPoints = new Set();
+  let BezierPoints = [];
   let Pointx = inputx; // tempat titik titiknya x
   let Pointy = inputy; // tempat titik titiknya y
   let iterations = iterNumber; // banyak iterasi
 
   function CreateBezier(titikTitik) {
-    BezierPoints.add(titikTitik[0]);
+    BezierPoints.push(titikTitik[0]);
 
     MidPointBezierPoints(
       titikTitik, // titik y
       0 // current iteration
-    ).forEach((elem) => BezierPoints.add(elem));
+    ).forEach((elem) => BezierPoints.push(elem));
 
-    BezierPoints.add(titikTitik[titikTitik.length - 1]);
+    BezierPoints.push(titikTitik[titikTitik.length - 1]);
   }
 
   function MidPointBezierPoints(aray, currentIteration) {
