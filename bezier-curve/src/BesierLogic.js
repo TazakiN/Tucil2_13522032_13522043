@@ -7,50 +7,43 @@ function BesierLogic(pointNumber, iterNumber, inputx, inputy) {
   function CreateBezier(titikTitik) {
     BezierPoints.add(titikTitik[0]);
 
-    let temp = [];
-    for (let i = 0; i < titikTitik.length - 2; i++) {
-      // ketika i = 1,
-      let threePoints = [];
-
-      threePoints.push(titikTitik[i]);
-
-      threePoints.push(titikTitik[i + 1]);
-
-      threePoints.push(titikTitik[i + 2]);
-
-      temp = MidPointBezierPoints(threePoints, 0);
-      for (let j = 1; j < temp.length; j += 2) {
-        BezierPoints.add(temp[j]);
-      }
-    }
+    MidPointBezierPoints(
+      titikTitik, // titik y
+      0 // current iteration
+    ).forEach((elem) => BezierPoints.add(elem));
 
     BezierPoints.add(titikTitik[titikTitik.length - 1]);
   }
 
   function MidPointBezierPoints(aray, currentIteration) {
     if (currentIteration >= iterations) {
-      return [MidPoint(aray[0], aray[aray.length - 1])];
+      return aray.filter((_, index) => index % 2 === 0);
     }
 
-    // itung mid point
-    let midPoint1 = MidPoint(aray[0], aray[1]);
-    let midPoint2 = MidPoint(aray[1], aray[2]);
-    let midPoint3 = MidPoint(midPoint1, midPoint2);
+    let nextIter = [];
+    let midPoints = [];
+    for (let i = 0; i < aray.length - 1; i++) {
+      let mid = MidPoint(aray[i], aray[i + 1]);
+      midPoints.push(mid);
+    }
 
-    let kiri = MidPointBezierPoints(
-      [aray[0], midPoint1, midPoint3],
-      currentIteration + 1
-    );
-    let kanan = MidPointBezierPoints(
-      [midPoint3, midPoint2, aray[aray.length - 1]],
-      currentIteration + 1
-    );
+    let hasil;
+    let hasilIter = [];
+    for (let i = 0; i < midPoints.length - 1; i++) {
+      hasil = MidPoint(midPoints[i], midPoints[i + 1]);
+      hasilIter.push(hasil);
+    }
 
-    let hasil = [];
-    hasil.push(...kiri);
-    hasil.push(midPoint3);
-    hasil.push(...kanan);
-    return [...hasil];
+    nextIter.push(aray[0]);
+    for (let i = 0; i < midPoints.length; i++) {
+      nextIter.push(midPoints[i]);
+      if (i < hasilIter.length) {
+        nextIter.push(hasilIter[i]);
+      }
+    }
+    nextIter.push(aray[aray.length - 1]);
+
+    return MidPointBezierPoints(nextIter, currentIteration + 1);
   }
 
   function MidPoint(titik1, titik2) {
@@ -73,9 +66,8 @@ function BesierLogic(pointNumber, iterNumber, inputx, inputy) {
   return BezierPoints;
 }
 
-// export default BesierLogic;
+export default BesierLogic;
 // Contoh penggunaan
 
-const results = BesierLogic(3, 2, [20, 30, 150, 200], [10, 100, 200, 75]);
-
-console.log(results);
+// const results = BesierLogic(4, 6, [20, 30, 150, 200], [10, 100, 200, 75]);
+// console.log(results);
