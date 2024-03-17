@@ -1,4 +1,5 @@
 function BezierLogicv2(Iterations, Inputx, Inputy) {
+  console.log("DIVIDE AND CONQUER");
   let Fin = [];
 
   function makePoints(arrayX, arrayY) {
@@ -87,7 +88,7 @@ function BezierLogicv2(Iterations, Inputx, Inputy) {
     if (Iter < MaxIter) {
       let mid = [[PascalControlsx(Ctrls, 0.5), PascalControlsy(Ctrls, 0.5)]];
       //   console.log(mid);
-      console.log("a");
+      //   console.log("a");
       let midsl = LeftMids(Ctrls);
       let midsr = RightMids(Ctrls);
 
@@ -102,12 +103,12 @@ function BezierLogicv2(Iterations, Inputx, Inputy) {
         let rights = recFind(midsr, Iter + 1, MaxIter);
         EnterLeft(mid, lefts);
         EnterRight(mid, rights);
-        console.log(lefts);
-        console.log(rights);
-        console.log(mid);
+        // console.log(lefts);
+        // console.log(rights);
+        // console.log(mid);
         return mid;
       } else {
-        console.log(mid);
+        // console.log(mid);
         return mid;
       }
     } else {

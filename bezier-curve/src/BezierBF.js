@@ -1,4 +1,5 @@
 function BezierBF(Iterations, Inputx, Inputy) {
+  console.log("BRUTE FORCE");
   let Fin = [];
 
   function makePoints(arrayX, arrayY) {
@@ -53,15 +54,11 @@ function BezierBF(Iterations, Inputx, Inputy) {
   let y = 0;
   let di = 1 / 2 ** (j + 1);
   let dianch = di;
-  // console.log("diath: " + di);
-  // console.log("j: " + j);
   while (di < 1) {
-    // console.log("bif" + di);
     x = PascalControlsx(Controls, di);
     y = PascalControlsy(Controls, di);
     Fin.push([x, y]);
     di += dianch;
-    // console.log("af" + di);
   }
   Fin.push(Controls[Controls.length - 1]);
   return Fin;

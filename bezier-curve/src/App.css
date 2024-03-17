@@ -28,15 +28,37 @@ h1 {
   box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
+/* .input-group {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+} */
+
 .input-group {
+  position: relative;
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
 
+.input-group span {
+  flex-grow: 1;
+}
+
+.input-group .switch-container {
+  position: absolute;
+  right: 0;
+}
+
 .label {
   color: #fff;
   width: 80px;
+  margin-right: 10px;
+}
+
+.label-2 {
+  color: #fff;
+  /* width: 80px; */
   margin-right: 10px;
 }
 
