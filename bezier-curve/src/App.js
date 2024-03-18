@@ -1,15 +1,18 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import "./App.css";
 import { Mafs, Coordinates, Line, Text } from "mafs";
 import ResultRenderer from "./ResultRenderer.js";
 import BezierBF from "./BezierBF.js";
 import BezierLogicv2 from "./BezierLogicv2.js";
+import BezierProcess from "./BezierProcess.js";
 import {
   drawLineSegments,
   makeCtrlPoints,
 } from "./components/CtrlPointRenderer.js";
 import { drawPoints } from "./components/drawPoints.js";
 import { Switch } from "antd";
+
+const colors = ["Yellow", "Red", "Blue"];
 
 function App() {
   const [pointNumber, setPointNumber] = useState(3);
@@ -21,8 +24,24 @@ function App() {
   const [daTime, setTime] = useState(null);
   const [counter, setCounter] = useState(1);
   const [isitdnc, setLogic] = useState(true);
+  const [isshow, setshow] = useState(false);
+  const [daPoints, setPoints] = useState(null);
+  const [isDots, setDots] = useState(true);
+  const [isProc, setProc] = useState(false);
+  const [daProc, setProccc] = useState(null);
 
   let inputedPoints = makeCtrlPoints(inputx, inputy, pointNumber);
+
+  const handleProc = () => {
+    isProc ? setProc(false) : setProc(true);
+  };
+
+  const handleDots = () => {
+    isDots ? setDots(false) : setDots(true);
+  };
+  const handleShowToggle = () => {
+    isshow ? setshow(false) : setshow(true);
+  };
 
   const handleLogicToggle = () => {
     isitdnc ? setLogic(false) : setLogic(true);
@@ -42,6 +61,7 @@ function App() {
 
   const handleBesierLogic = () => {
     let newresult = [];
+    let proc = [];
     let startTime,
       endTime = 0;
     if (isitdnc) {
@@ -56,8 +76,10 @@ function App() {
     console.log(endTime - startTime);
     console.log(newresult);
 
+    proc = BezierProcess(iterNumber, inputx, inputy);
+    console.log(proc);
+
     // console.log("HERE");
-    // console.log(newresult);
     setResult(newresult);
 
     let maxx = newresult[0][0];
@@ -78,46 +100,77 @@ function App() {
         miny = newresult[i][1];
       }
     }
-
-    setMafs(
-      <Mafs
-        viewBox={{ x: [minx - 2, maxx + 2], y: [miny - 2, maxy + 2] }}
-        // x: [Math.min(result[0]), Math.max(result[0])],
-        //   y: [Math.min(result[1]), Math.max(result[1])],
-        preserveAspectRatio={false}
-        zoom={true}
-      >
-        <Coordinates.Cartesian
-          xAxis={{ labels: false }}
-          yAxis={{ labels: false }}
-        />
-
-        {/* buat ctrl point dan garisnya */}
-
-        {inputedPoints.slice(0, inputedPoints.length - 1).map((item, idx) => (
-          <ResultRenderer
-            key={idx + counter * 1000}
-            data={inputedPoints}
-            index={idx}
+    if (isDots) {
+      setMafs(
+        <Mafs
+          viewBox={{ x: [minx - 2, maxx + 2], y: [miny - 2, maxy + 2] }}
+          // x: [Math.min(result[0]), Math.max(result[0])],
+          //   y: [Math.min(result[1]), Math.max(result[1])],
+          // preserveAspectRatio={true}
+          zoom={true}
+        >
+          <Coordinates.Cartesian
+            xAxis={{ labels: false }}
+            yAxis={{ labels: false }}
           />
-        ))}
 
-        {newresult.slice(0, newresult.length - 1).map((item, idx) => (
-          <Line.Segment
-            key={idx + counter * 1000}
-            point1={newresult[idx]}
-            point2={newresult[idx + 1]}
-            opacity={1}
-            color={"#AA19C7"}
+          {/* buat ctrl point dan garisnya */}
+
+          {inputedPoints.slice(0, inputedPoints.length - 1).map((item, idx) => (
+            <ResultRenderer
+              key={idx + counter * 1000}
+              data={inputedPoints}
+              index={idx}
+            />
+          ))}
+
+          {newresult.slice(0, newresult.length - 1).map((item, idx) => (
+            <Line.Segment
+              key={idx + counter * 1000}
+              point1={newresult[idx]}
+              point2={newresult[idx + 1]}
+              opacity={1}
+              color={"#AA19C7"}
+            />
+          ))}
+
+          {/* {drawLineSegments(newresult, "#AA19C7", 1)} */}
+          {drawPoints(newresult, "#AA19C7", 1)}
+
+          {/* {result.length > 0 && <ResultRenderer data={result} />} */}
+        </Mafs>
+      );
+    } else {
+      setMafs(
+        <Mafs
+          viewBox={{ x: [minx - 2, maxx + 2], y: [miny - 2, maxy + 2] }}
+          zoom={true}
+        >
+          <Coordinates.Cartesian
+            xAxis={{ labels: false }}
+            yAxis={{ labels: false }}
           />
-        ))}
 
-        {/* {drawLineSegments(newresult, "#AA19C7", 1)} */}
-        {drawPoints(newresult, "#AA19C7", 1)}
+          {inputedPoints.slice(0, inputedPoints.length - 1).map((item, idx) => (
+            <ResultRenderer
+              key={idx + counter * 1000}
+              data={inputedPoints}
+              index={idx}
+            />
+          ))}
 
-        {/* {result.length > 0 && <ResultRenderer data={result} />} */}
-      </Mafs>
-    );
+          {newresult.slice(0, newresult.length - 1).map((item, idx) => (
+            <Line.Segment
+              key={idx + counter * 1000}
+              point1={newresult[idx]}
+              point2={newresult[idx + 1]}
+              opacity={1}
+              color={"#AA19C7"}
+            />
+          ))}
+        </Mafs>
+      );
+    }
     setCounter(counter + 1);
     setTime(
       <div className="input-group">
@@ -126,6 +179,78 @@ function App() {
         </label>
       </div>
     );
+
+    if (isshow) {
+      setPoints(
+        <div className="input-group-2">
+          <label className="label-3">
+            {newresult.length} Points Generated
+            <br />
+          </label>
+          {newresult.map((_, index) => (
+            <label className="label-2">
+              Point {index + 1}: {" " + newresult[index][0] + ","}{" "}
+              {newresult[index][1]}
+              <br />
+            </label>
+          ))}
+        </div>
+      );
+    } else {
+      setPoints(null);
+    }
+
+    if (isProc) {
+      setProccc(
+        <Mafs
+          viewBox={{ x: [minx - 2, maxx + 2], y: [miny - 2, maxy + 2] }}
+          zoom={true}
+        >
+          <Coordinates.Cartesian
+            xAxis={{ labels: false }}
+            yAxis={{ labels: false }}
+          />
+
+          {inputedPoints.slice(0, inputedPoints.length - 1).map((item, idx) => (
+            <ResultRenderer
+              key={idx + counter * 1000}
+              data={inputedPoints}
+              index={idx}
+            />
+          ))}
+
+          {newresult.slice(0, newresult.length - 1).map((item, idx) => (
+            <Line.Segment
+              key={idx + counter * 1000}
+              point1={newresult[idx]}
+              point2={newresult[idx + 1]}
+              opacity={1}
+              color={"#AA19C7"}
+            />
+          ))}
+
+          {drawPoints(newresult, "#AA19C7", 1)}
+
+          {proc
+            .slice(0, proc.length)
+            .map((item, idp) =>
+              proc[idp]
+                .slice(0, proc[idp].length - 1)
+                .map((items, idpp) => (
+                  <Line.Segment
+                    key={idpp + counter * 1000}
+                    point1={proc[idp][idpp]}
+                    point2={proc[idp][idpp + 1]}
+                    opacity={1}
+                    color={"Yellow"}
+                  />
+                ))
+            )}
+        </Mafs>
+      );
+    } else {
+      setProccc(null);
+    }
   };
 
   return (
@@ -181,6 +306,36 @@ function App() {
             }}
           />
         </div>
+
+        <br />
+        {[...Array(pointNumber)].map((_, index) => (
+          <div className="inputRow" key={index}>
+            <div className="input-group">
+              <label className="label">Point {index + 1}</label>
+              <input
+                // defaultValue={0}
+                className="input"
+                type="number"
+                placeholder={`x${index + 1}`}
+                value={inputx[index] !== undefined ? inputx[index] : ""}
+                onChange={(e) =>
+                  handleInputChangex(index, parseInt(e.target.value), 0)
+                }
+              />
+              <input
+                // defaultValue={0}
+                className="input"
+                type="number"
+                placeholder={`y${index + 1}`}
+                value={inputy[index] !== undefined ? inputy[index] : ""}
+                onChange={(e) =>
+                  handleInputChangey(index, parseInt(e.target.value), 1)
+                }
+              />
+            </div>
+            <br />
+          </div>
+        ))}
         <div className="input-group">
           <Switch onClick={handleLogicToggle} />
         </div>
@@ -191,34 +346,36 @@ function App() {
             <label className="label-2">Using BruteForce</label>
           )}
         </div>
-        <br />
-        {[...Array(pointNumber)].map((_, index) => (
-          <div className="inputRow" key={index}>
-            <div className="input-group">
-              <label className="label">Point {index + 1}</label>
-              <input
-                className="input"
-                type="number"
-                placeholder={`x${index + 1}`}
-                value={inputx[index]}
-                onChange={(e) =>
-                  handleInputChangex(index, parseInt(e.target.value), 0)
-                }
-              />
-              <input
-                className="input"
-                type="number"
-                placeholder={`y${index + 1}`}
-                value={inputy[index] ? inputy[index] : ""}
-                onChange={(e) =>
-                  handleInputChangey(index, parseInt(e.target.value), 1)
-                }
-              />
-            </div>
-            <br />
-          </div>
-        ))}
-
+        <div className="input-group">
+          <Switch onClick={handleShowToggle} />
+        </div>
+        <div className="input-group">
+          {isshow ? (
+            <label className="label-2">Generated Points: ON</label>
+          ) : (
+            <label className="label-2">Generated Points: OFF</label>
+          )}
+        </div>
+        <div className="input-group">
+          <Switch onClick={handleDots} defaultValue={true} />
+        </div>
+        <div className="input-group">
+          {isDots ? (
+            <label className="label-2">Dots on Curve: ON</label>
+          ) : (
+            <label className="label-2">Dots on Curve: OFF</label>
+          )}
+        </div>
+        <div className="input-group">
+          <Switch onClick={handleProc} />
+        </div>
+        <div className="input-group">
+          {isProc ? (
+            <label className="label-2">Process: ON</label>
+          ) : (
+            <label className="label-2">Process: OFF</label>
+          )}
+        </div>
         <button className="addButton" onClick={handleBesierLogic}>
           Process Bezier Curve
         </button>
@@ -226,6 +383,12 @@ function App() {
       <div className="container" hidden={result.length === 0}>
         {daMafs}
         {daTime}
+      </div>
+      <div className="container" hidden={result.length === 0}>
+        {daProc}
+      </div>
+      <div className="container" hidden={result.length === 0}>
+        {daPoints}
       </div>
     </>
   );

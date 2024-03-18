@@ -1,5 +1,4 @@
-function BezierBF(Iterations, Inputx, Inputy) {
-  console.log("BRUTE FORCE");
+function BezierProcess(Iterations, Inputx, Inputy) {
   let Fin = [];
 
   function makePoints(arrayX, arrayY) {
@@ -11,8 +10,6 @@ function BezierBF(Iterations, Inputx, Inputy) {
   }
 
   let Controls = makePoints(Inputx, Inputy);
-
-  Fin.push(Controls[0]);
 
   function pascalRow(order, index) {
     let row = [];
@@ -50,19 +47,31 @@ function BezierBF(Iterations, Inputx, Inputy) {
     return n;
   }
 
+  function Midol(Ctrls, di) {
+    let arr = [];
+    for (let k = 0; k < Ctrls.length - 1; k++) {
+      arr.push([
+        PascalControlsx(Ctrls.slice(k, k + 2), di),
+        PascalControlsy(Ctrls.slice(k, k + 2), di),
+      ]);
+    }
+    return arr;
+  }
+
   let j = Iterations - 1;
-  let x = 0;
-  let y = 0;
   let di = 1 / 2 ** (j + 1);
   let dianch = di;
+  let Controlstemp = Controls;
   while (di < 1) {
-    x = PascalControlsx(Controls, di);
-    y = PascalControlsy(Controls, di);
-    Fin.push([x, y]);
+    Controls = Controlstemp;
+    while (Midol(Controls, di).length >= 2) {
+      console.log(Midol(Controls, di));
+      Fin.push(Midol(Controls, di));
+      Controls = Midol(Controls, di);
+    }
     di += dianch;
   }
-  Fin.push(Controls[Controls.length - 1]);
   return Fin;
 }
 
-export default BezierBF;
+export default BezierProcess;

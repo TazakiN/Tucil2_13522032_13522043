@@ -41,6 +41,13 @@ h1 {
   margin-bottom: 10px;
 }
 
+.input-group-2 {
+  position: relative;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+
 .input-group span {
   flex-grow: 1;
 }
@@ -58,6 +65,13 @@ h1 {
 
 .label-2 {
   color: #fff;
+  /* width: 80px; */
+  margin-right: 10px;
+}
+
+.label-3 {
+  color: #fff;
+  align-items: center;
   /* width: 80px; */
   margin-right: 10px;
 }

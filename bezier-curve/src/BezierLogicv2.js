@@ -95,9 +95,6 @@ function BezierLogicv2(Iterations, Inputx, Inputy) {
       midsl.push(mid[0]);
       midsr.unshift(mid[0]);
 
-      //   console.log(midsl);
-      //   console.log(midsr);
-
       if (Iter + 1 < MaxIter) {
         let lefts = recFind(midsl, Iter + 1, MaxIter);
         let rights = recFind(midsr, Iter + 1, MaxIter);
